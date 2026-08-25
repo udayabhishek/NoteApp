@@ -22,14 +22,6 @@ final class AddNoteViewModel: ObservableObject {
         self.context = context
         self.note = note
         self.isEditing = note != nil
-        
-        print("Selected note:", note as Any)
-           print("Selected title:", note?.title as Any)
-           print("Selected details:", note?.details as Any)
-
-           self.title = note?.title ?? ""
-           self.details = note?.details ?? ""
-           self.isEditing = note == nil
     }
     
     func saveNote() {
@@ -47,7 +39,7 @@ final class AddNoteViewModel: ObservableObject {
             newNote.details = details
             newNote.createdAt = Date()
         }
-    
+        
         do {
             try context.save()
         } catch {
