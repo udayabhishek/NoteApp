@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct NoteItem: Identifiable {
+    var id: UUID
+    let title: String = ""
+    let details: String = ""
+}

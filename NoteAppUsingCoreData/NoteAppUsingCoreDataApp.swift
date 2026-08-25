@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import CoreData
 
 @main
 struct NoteAppUsingCoreDataApp: App {
+    let controller = PersistentController.shared
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CreateNote()
+                .environment(\.managedObjectContext, controller.container.viewContext)
         }
     }
 }
