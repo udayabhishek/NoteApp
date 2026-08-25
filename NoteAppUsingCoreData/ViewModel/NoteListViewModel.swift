@@ -9,22 +9,20 @@ import Foundation
 import CoreData
 import Combine
 
-class NoteListViewModel: ObservableObject {
+@MainActor
+final class NoteListViewModel: ObservableObject {
     
     @Published private(set) var notes: [Note] = []
+    
     private let context: NSManagedObjectContext
     
     init(context: NSManagedObjectContext) {
         self.context = context
     }
     
-    func create() {
-        
-    }
-    
     func fetchNotes() {
         let fetchRequest: NSFetchRequest<Note> = Note.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor.init(keyPath: \Note.createdAt, ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor.init(keyPath: \Note.createdAt, ascending: false)]
         
         do {
             notes = try context.fetch(fetchRequest)
@@ -34,10 +32,6 @@ class NoteListViewModel: ObservableObject {
         }
     }
     
-    func update() {
-        
-    }
-    
     func delete(_ indexSet: IndexSet) {
         for i in indexSet {
             context.delete(notes[i])
@@ -45,11 +39,10 @@ class NoteListViewModel: ObservableObject {
         
         do {
             try context.save()
+            fetchNotes()
         } catch  {
             print(error.localizedDescription)
         }
-        
     }
-    
     
 }

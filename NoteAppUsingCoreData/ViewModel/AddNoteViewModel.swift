@@ -13,24 +13,53 @@ import Combine
 final class AddNoteViewModel: ObservableObject {
     @Published var title = ""
     @Published var details = ""
+    @Published var isEditing = false
     
     private let context: NSManagedObjectContext
+    private var note: Note?
     
-    init(context: NSManagedObjectContext) {
+    init(context: NSManagedObjectContext, note: Note? = nil) {
         self.context = context
+        self.note = note
+        self.isEditing = note != nil
+        
+        print("Selected note:", note as Any)
+           print("Selected title:", note?.title as Any)
+           print("Selected details:", note?.details as Any)
+
+           self.title = note?.title ?? ""
+           self.details = note?.details ?? ""
+           self.isEditing = note == nil
     }
     
     func saveNote() {
-        let note = Note(context: context)
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        note.title = title
-        note.details = details
-        note.createdAt = Date()
+        guard !trimmedTitle.isEmpty else { return }
         
+        if let note { //Update
+            note.title = trimmedTitle
+            note.details = details
+        } else { //Create
+            let newNote = Note(context: context)
+            
+            newNote.title = trimmedTitle
+            newNote.details = details
+            newNote.createdAt = Date()
+        }
+    
         do {
             try context.save()
         } catch {
             print("Failed to save note: \(error)")
         }
+    }
+    
+    func startEditing() {
+        isEditing = true
+    }
+    
+    func selectedNote(_ selectedNote: Note? = nil) {
+        self.note = selectedNote
     }
 }

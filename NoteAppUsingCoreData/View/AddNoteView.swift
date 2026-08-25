@@ -9,13 +9,13 @@ import SwiftUI
 import CoreData
 
 struct AddNoteView: View {
-    
+    var note: Note?
     @StateObject private var viewModel: AddNoteViewModel
     
     @Environment(\.dismiss) private var dismiss
     
-    init(context: NSManagedObjectContext) {
-        _viewModel = StateObject(wrappedValue: AddNoteViewModel(context: context))
+    init(context: NSManagedObjectContext, note: Note? = nil) {
+        _viewModel = StateObject(wrappedValue: AddNoteViewModel(context: context, note: note))
     }
     
     var body: some View {
@@ -29,16 +29,23 @@ struct AddNoteView: View {
                     .frame(minHeight: 200)
             }
         }
-        .navigationTitle("New note")
+        .navigationTitle(viewModel.isEditing ? "Edit Notes" : "New note")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Save") {
-                    viewModel.saveNote()
-                    dismiss()
+                if viewModel.isEditing {
+                    Button(viewModel.isEditing ? "Update" : "Save") {
+                        viewModel.saveNote()
+                        dismiss()
+                    }
+                    .disabled(viewModel.title
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .isEmpty)
+                } else {
+                    Button("Edit") {
+                        viewModel.startEditing()
+                    }
                 }
-                .disabled(viewModel.title
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                    .isEmpty)
+
             }
         }
     }
