@@ -9,10 +9,12 @@ import SwiftUI
 import CoreData
 
 struct CreateNote: View {
-    @State private var name: String = ""
-    @State private var details: String = ""
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Note.title, ascending: true)]) private var notes: FetchedResults<Note>
     
     @Environment(\.managedObjectContext) private var context
+    
+    @State private var name: String = ""
+    @State private var details: String = ""
     
     var body: some View {
         NavigationStack {
@@ -26,6 +28,13 @@ struct CreateNote: View {
                 .padding()
                 
                 Spacer()
+                
+                List {
+                    ForEach(notes) { note in
+                        Text(note.title ?? "")
+                            .font(.title)
+                    }
+                }
             }
             .navigationTitle("Notes")
             .padding()
