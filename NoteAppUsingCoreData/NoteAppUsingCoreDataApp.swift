@@ -14,7 +14,7 @@ struct NoteAppUsingCoreDataApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CreateNote()
+            NoteList()
                 .environment(\.managedObjectContext, controller.container.viewContext)
         }
     }

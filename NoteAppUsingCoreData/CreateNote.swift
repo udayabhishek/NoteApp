@@ -29,12 +29,7 @@ struct CreateNote: View {
                 
                 Spacer()
                 
-                List {
-                    ForEach(notes) { note in
-                        Text(note.title ?? "")
-                            .font(.title)
-                    }
-                }
+               
             }
             .navigationTitle("Notes")
             .padding()
