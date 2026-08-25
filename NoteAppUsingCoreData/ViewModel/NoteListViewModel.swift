@@ -38,7 +38,16 @@ class NoteListViewModel: ObservableObject {
         
     }
     
-    func delete() {
+    func delete(_ indexSet: IndexSet) {
+        for i in indexSet {
+            context.delete(notes[i])
+        }
+        
+        do {
+            try context.save()
+        } catch  {
+            print(error.localizedDescription)
+        }
         
     }
     

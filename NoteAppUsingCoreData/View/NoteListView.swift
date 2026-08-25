@@ -31,6 +31,13 @@ struct NoteListView: View {
                             .lineLimit(2)
                     }
                 }
+                .onDelete(perform: viewModel.delete)
+                .refreshable {
+                    viewModel.fetchNotes()
+                }
+            }
+            .refreshable {
+                viewModel.fetchNotes()
             }
             .navigationTitle("Notes")
             .toolbar {
